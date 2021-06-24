@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/MohamedNazir/webscraper/webscraper/domain"
+	"github.com/MohamedNazir/webscraper/domain"
 	"golang.org/x/net/html"
 )
 

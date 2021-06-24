@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/MohamedNazir/webscraper/webscraper/controller"
-	"github.com/MohamedNazir/webscraper/webscraper/service"
+	"github.com/MohamedNazir/webscraper/controller"
+	"github.com/MohamedNazir/webscraper/service"
 )
 
 var (

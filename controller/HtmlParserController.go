@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/MohamedNazir/webscraper/webscraper/service"
+	"github.com/MohamedNazir/webscraper/service"
 )
 
 const (

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/MohamedNazir/webscraper/webscraper/domain"
+	"github.com/MohamedNazir/webscraper/domain"
 	"golang.org/x/net/html"
 )
 
