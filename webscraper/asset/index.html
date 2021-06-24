@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Website Analyzer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    <div class="jumbotron text-center">
+        <form action="/search" method="POST">
+            <div class="d-flex justify-content-center">
+                <div class="p-pr-3">
+                    <h6>Enter the web page URL</h6>
+                </div>
+                <div></div>
+                <div>
+                    <input type="text text-sm" name="queryUrl" autofocus placeholder="Enter the URL">
+                    <button type="submit" class="btn btn-warning btn-sm">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <main>
+        <div class="container-fluid ">
+            {{if .}}
+            <section class="container">
+                <table class="table table-striped table-hover ">
+                    <tbody>
+
+                        <tr>
+                            <th>HTML version </th>
+                            <td>{{ .HtmlVersion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Page Title </th>
+                            <td>{{ .PageTitle }}</td>
+                        </tr>
+                        <tr>
+                            <th>Headings count by level </th>
+                            <td>
+                        <tr>
+                            <th>h1</th>
+                            <td>{{ .Headers.H1 }}</td>
+                        </tr>
+                        <tr>
+                            <th>h2</th>
+                            <td>{{ .Headers.H2 }}</td>
+                        </tr>
+                        <tr>
+                            <th>h3</th>
+                            <td>{{ .Headers.H3 }}</td>
+                        </tr>
+                        <tr>
+                            <th>h4</th>
+                            <td>{{ .Headers.H4 }}</td>
+                        </tr>
+                        <tr>
+                            <th>h5</th>
+                            <td>{{ .Headers.H5 }}</td>
+                        </tr>
+                        <tr>
+                            <th>h6</th>
+                            <td>{{ .Headers.H6 }}</td>
+                        </tr>
+                        </td>
+                        </tr>
+                        <tr>
+                            <th>Total links including duplicates </th>
+                            <td>{{ .Links.AllLinks }}</td>
+                        </tr>
+                        <tr>
+                            <th>Amount of internal links </th>
+                            <td>{{ .Links.Internal}}</td>
+                        </tr>
+                        <tr>
+                            <th>Amount of external links </th>
+                            <td>{{ .Links.External }}</td>
+                        </tr>
+                        <tr>
+                            <th>Amount of inaccessible links </th>
+                            <td>{{ .Links.External }}</td>
+                        </tr>
+                        <tr>
+                            <th>If a page contains a login form </th>
+                            <td>{{ .IsLoginPage }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            {{ end }}
+        </div>
+    </main>
+</body>
+
+</html>
