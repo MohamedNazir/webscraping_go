@@ -1,4 +1,4 @@
-package service
+package service_test
 
 import (
 	"reflect"
@@ -42,8 +42,8 @@ var (
 	}
 )
 
-// go test ParserLogic_test.go ParserLogic.go
-// go test -race --cover -v ParserLogic_test.go ParserLogic.go
+// go test ParserLogic_test.go Parser.go
+// go test -race --cover -v Parser_test.go Parser.go
 
 func TestParse(t *testing.T) {
 	t.Parallel()
@@ -70,7 +70,7 @@ func TestParse(t *testing.T) {
 	}
 }
 
-// go test -cpu 1,2,4,8 -benchmem -run=^$ -bench . ParserLogic_test.go
+// go test -cpu 1,2,4,8 -benchmem -run=^$ -bench . Parser_test.go
 func BenchmarkParse(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {

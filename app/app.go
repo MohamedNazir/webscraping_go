@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/MohamedNazir/webscraper/controller"
+	"github.com/MohamedNazir/webscraper/handler"
 	"github.com/MohamedNazir/webscraper/service"
 )
 
@@ -26,7 +26,7 @@ func init() {
 func StartApplication() {
 
 	HtmlParserService := service.NewHtmlParserService(client)
-	ctrl := controller.HtmlParserController{Service: HtmlParserService}
+	ctrl := handler.HtmlParserHandler{Service: HtmlParserService}
 
 	port := os.Getenv("PORT")
 	if port == "" {

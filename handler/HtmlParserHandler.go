@@ -1,4 +1,4 @@
-package controller
+package handler
 
 import (
 	"fmt"
@@ -11,14 +11,14 @@ import (
 
 const (
 	QUERY         = "queryUrl"
-	PARSING_ERR   = "form parsing error : %v"
 	DATA          = "data"
 	ERR           = "err"
+	PARSING_ERR   = "form parsing error : %v"
 	ERR_MSG_ERROR = "Sorry, something went wrong"
 	RESULT        = "result"
 )
 
-type HtmlParserController struct {
+type HtmlParserHandler struct {
 	Service service.HtmlParserService
 }
 
@@ -26,11 +26,11 @@ var (
 	tmpl = template.Must(template.ParseFiles("./asset/index.html"))
 )
 
-func (hpc *HtmlParserController) IndexHandler(w http.ResponseWriter, r *http.Request) {
+func (hpc *HtmlParserHandler) IndexHandler(w http.ResponseWriter, r *http.Request) {
 	render(w, nil)
 }
 
-func (hpc *HtmlParserController) SearchHandler(w http.ResponseWriter, r *http.Request) {
+func (hpc *HtmlParserHandler) SearchHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := r.ParseForm(); err != nil {
 		fmt.Fprintln(w, fmt.Errorf(PARSING_ERR, err))
