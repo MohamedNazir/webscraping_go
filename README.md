@@ -23,5 +23,4 @@
 
 **Features**
 1. Fully tested 
-2. web based html templating application
-3. 
+2. web based html templating application 
