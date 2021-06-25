@@ -42,6 +42,9 @@ var (
 	}
 )
 
+// go test ParserLogic_test.go ParserLogic.go
+// go test -race --cover -v ParserLogic_test.go ParserLogic.go
+
 func TestParse(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
@@ -68,7 +71,7 @@ func TestParse(t *testing.T) {
 }
 
 // go test -cpu 1,2,4,8 -benchmem -run=^$ -bench . ParserLogic_test.go
-func Benchmark_name(b *testing.B) {
+func BenchmarkParse(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		Parse(DOC_ONE)
