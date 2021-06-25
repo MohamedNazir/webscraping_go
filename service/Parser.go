@@ -43,6 +43,7 @@ func Parse(doc *html.Tokenizer) (*domain.Result, error) {
 	extLink := []string{}
 	fieldMap := make(map[string]interface{})
 
+	// go-routine to iterate over the html content
 	go Iterate(doc, headerChan, linksChan, fieldChan)
 
 	wg := sync.WaitGroup{}

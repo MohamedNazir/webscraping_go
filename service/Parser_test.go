@@ -1,4 +1,4 @@
-package service_test
+package service
 
 import (
 	"reflect"
@@ -42,7 +42,7 @@ var (
 	}
 )
 
-// go test ParserLogic_test.go Parser.go
+// go test Parser_test.go Parser.go
 // go test -race --cover -v Parser_test.go Parser.go
 
 func TestParse(t *testing.T) {

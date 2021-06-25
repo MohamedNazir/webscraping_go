@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -16,6 +15,7 @@ const (
 	PARSING_ERR   = "form parsing error : %v"
 	ERR_MSG_ERROR = "Sorry, something went wrong"
 	RESULT        = "result"
+	SUCCESS_RES   = "sending response back"
 )
 
 type HtmlParserHandler struct {
@@ -23,17 +23,18 @@ type HtmlParserHandler struct {
 }
 
 var (
-	tmpl = template.Must(template.ParseFiles("./asset/index.html"))
+	tmpl = template.Must(template.ParseFiles("../asset/index.html"))
 )
 
 func (hpc *HtmlParserHandler) IndexHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Request received for /")
 	render(w, nil)
 }
 
 func (hpc *HtmlParserHandler) SearchHandler(w http.ResponseWriter, r *http.Request) {
-
+	log.Println("Request received for /search")
 	if err := r.ParseForm(); err != nil {
-		fmt.Fprintln(w, fmt.Errorf(PARSING_ERR, err))
+		log.Println(err)
 		return
 	}
 
@@ -45,7 +46,7 @@ func (hpc *HtmlParserHandler) SearchHandler(w http.ResponseWriter, r *http.Reque
 		render(w, err)
 		return
 	}
-
+	log.Println(SUCCESS_RES)
 	render(w, map[string]interface{}{RESULT: result})
 }
 

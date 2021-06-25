@@ -2,6 +2,7 @@ package app
 
 import (
 	"crypto/tls"
+	"log"
 	"net/http"
 	"os"
 
@@ -25,15 +26,18 @@ func init() {
 
 func StartApplication() {
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	HtmlParserService := service.NewHtmlParserService(client)
 	hh := handler.HtmlParserHandler{Service: HtmlParserService}
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "3000"
-	}
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", hh.IndexHandler)
 	mux.HandleFunc("/search", hh.SearchHandler)
+
+	log.Printf("Server starting at port :%s \n", port)
 	http.ListenAndServe(":"+port, mux)
 }
