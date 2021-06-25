@@ -22,7 +22,7 @@ const (
 	LOGIN    = "login"
 	VERSION  = "version"
 	HTML     = "html"
-	DTD      = "dtd"
+	DTD      = "DTD"
 	HREF     = "href"
 	TYPE     = "type"
 	INPUT    = "input"
@@ -33,19 +33,20 @@ const (
 func Parse(doc *html.Tokenizer) (*domain.Result, error) {
 
 	res := &domain.Result{}
-	var wg sync.WaitGroup
-	wg.Add(4)
-	hMap := make(map[string]int)
-	intLink := []string{}
-	extLink := []string{}
-	fieldMap := make(map[string]interface{})
 
 	headerChan := make(chan string)
 	fieldChan := make(chan map[string]interface{})
 	linksChan := make(chan string)
 
-	isDone := make(chan bool, 1)
-	go Iterate(doc, isDone, headerChan, linksChan, fieldChan)
+	hMap := make(map[string]int)
+	intLink := []string{}
+	extLink := []string{}
+	fieldMap := make(map[string]interface{})
+
+	go Iterate(doc, headerChan, linksChan, fieldChan)
+
+	wg := sync.WaitGroup{}
+	wg.Add(3)
 
 	go func() {
 		defer wg.Done()
@@ -75,7 +76,7 @@ func Parse(doc *html.Tokenizer) (*domain.Result, error) {
 		}
 	}()
 
-	<-isDone
+	wg.Wait()
 
 	res.Headers.H1 = hMap[H1]
 	res.Headers.H2 = hMap[H2]
@@ -103,7 +104,7 @@ func Parse(doc *html.Tokenizer) (*domain.Result, error) {
 	return res, nil
 }
 
-func Iterate(doc *html.Tokenizer, isDone chan bool, headerChan chan string, linksChan chan string, fieldChan chan map[string]interface{}) {
+func Iterate(doc *html.Tokenizer, headerChan chan string, linksChan chan string, fieldChan chan map[string]interface{}) {
 
 	for tokenType := doc.Next(); tokenType != html.ErrorToken; {
 		token := doc.Token()
@@ -152,8 +153,9 @@ func Iterate(doc *html.Tokenizer, isDone chan bool, headerChan chan string, link
 		tokenType = doc.Next()
 	}
 
-	isDone <- true
-
+	close(fieldChan)
+	close(headerChan)
+	close(linksChan)
 }
 
 func getHref(t html.Token) string {
