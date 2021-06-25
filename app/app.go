@@ -26,14 +26,14 @@ func init() {
 func StartApplication() {
 
 	HtmlParserService := service.NewHtmlParserService(client)
-	ctrl := handler.HtmlParserHandler{Service: HtmlParserService}
+	hh := handler.HtmlParserHandler{Service: HtmlParserService}
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", ctrl.IndexHandler)
-	mux.HandleFunc("/search", ctrl.SearchHandler)
+	mux.HandleFunc("/", hh.IndexHandler)
+	mux.HandleFunc("/search", hh.SearchHandler)
 	http.ListenAndServe(":"+port, mux)
 }
