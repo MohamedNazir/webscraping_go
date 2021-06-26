@@ -40,6 +40,6 @@ func (s DefaultParaserService) ParseHtml(u string) (*domain.Result, error) {
 	defer response.Body.Close()
 	doc := html.NewTokenizer(response.Body)
 
-	return Parse(doc)
+	return Parse(doc, u)
 
 }

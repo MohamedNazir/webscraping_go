@@ -11,6 +11,7 @@ type Links struct {
 }
 
 type Result struct {
+	Url         string
 	HtmlVersion string
 	PageTitle   string
 	IsLoginPage bool

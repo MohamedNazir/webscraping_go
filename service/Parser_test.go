@@ -21,6 +21,7 @@ var (
 		Internal: 1, External: 1, InAccessible: 0,
 	}
 	expected_1 = &domain.Result{
+		Url:         "http://dummy.com/1",
 		HtmlVersion: "HTML 5",
 		PageTitle:   "The Go Playground",
 		IsLoginPage: true,
@@ -35,6 +36,7 @@ var (
 		Internal: 3, External: 2, InAccessible: 3,
 	}
 	expected_2 = &domain.Result{
+		Url:         "http://dummy.com/2",
 		HtmlVersion: "HTML 4.01",
 		PageTitle:   "The Test Case 2",
 		IsLoginPage: false,
@@ -48,18 +50,33 @@ var (
 
 func TestParse(t *testing.T) {
 	t.Parallel()
+
+	type args struct {
+		doc *html.Tokenizer
+		url string
+	}
+
+	testInput1 := &args{
+		doc: DOC_ONE,
+		url: "http://dummy.com/1",
+	}
+	testInput2 := &args{
+		doc: DOC_TWO,
+		url: "http://dummy.com/2",
+	}
+
 	tests := []struct {
 		name    string
-		args    *html.Tokenizer
+		args    *args
 		want    *domain.Result
 		wantErr bool
 	}{
-		{"test case 1", DOC_ONE, expected_1, false},
-		{"test cas 2", DOC_TWO, expected_2, false},
+		{"test case 1", testInput1, expected_1, false},
+		{"test case 2", testInput2, expected_2, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Parse(tt.args)
+			got, err := Parse(tt.args.doc, tt.args.url)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -75,7 +92,7 @@ func TestParse(t *testing.T) {
 func BenchmarkParse(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
-		Parse(DOC_ONE)
+		Parse(DOC_ONE, "")
 	}
 
 }

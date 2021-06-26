@@ -30,11 +30,11 @@ const (
 	HTML5    = "HTML 5"
 )
 
-func Parse(doc *html.Tokenizer) (*domain.Result, error) {
+func Parse(doc *html.Tokenizer, url string) (*domain.Result, error) {
 
 	h := &domain.Headers{}
 	l := &domain.Links{}
-	res := &domain.Result{}
+	res := &domain.Result{Url: url}
 
 	headerChan := make(chan string)
 	fieldChan := make(chan map[string]interface{}, 3)

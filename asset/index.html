@@ -16,14 +16,13 @@
     <div class="jumbotron text-center text-dark">
         <div class="container">
             <div class="row">
-                <div class="col"></div>
                 <div class="col-6 d-flex justify-content-between">
                     <h6>Enter the web page URL</h6>
                 </div>
                 <div class="col"></div>
+                <div class="col"></div>
             </div>
             <div class="row">
-                <div class="col"></div>
                 <div class="col  d-flex justify-content-between">
                     <form action="/search" method="POST">
                         <div>
@@ -31,21 +30,25 @@
                             <button type="submit" class="btn btn-warning btn-sm">Search</button>
                         </div>
                     </form>
-
                 </div>
                 <div class="col-6">
                     {{ with .err }}
                     <spn class="text-danger">{{.data }}</spn>
                     {{end}}
                 </div>
+                <div class="col"></div>
             </div>
+
         </div>
     </div>
     <main>
         <div class="container-fluid ">
             {{ with .result }}
             <section class="container">
-                <div class="height: 50px; overflow:auto;">
+                <div>
+                    <h6>Result for <span class=" text-primary">{{ .Url}}</span></h6>
+                </div>
+                <div class=" height: 50px; overflow:auto;">
                     <table class="table table-striped table-hover type-list4 table-sm ">
                         <tbody>
                             <tr>
