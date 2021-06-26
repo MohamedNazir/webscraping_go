@@ -13,7 +13,7 @@
 5. After build success Run the command.
    
    **docker run -p 8080:8080 -it go-webscraper**
-6. Open the web browser and hit the url "https://localhost:8080".
+6. Open the web browser and hit the url "http://localhost:8080".
 
 
 
@@ -23,7 +23,7 @@
 2. Download/clone the source code
 3. go to cmd directory inside the root of the application, where you can find main.go files
 4. Run the command as "go run main.go"
-5. Open the web browser and hit the url "https://localhost:8080".
+5. Open the web browser and hit the url "http://localhost:8080".
 
 
 
