@@ -32,16 +32,13 @@ const (
 
 func Parse(doc *html.Tokenizer) (*domain.Result, error) {
 
+	h := &domain.Headers{}
+	l := &domain.Links{}
 	res := &domain.Result{}
 
 	headerChan := make(chan string)
-	fieldChan := make(chan map[string]interface{})
+	fieldChan := make(chan map[string]interface{}, 3)
 	linksChan := make(chan string)
-
-	hMap := make(map[string]int)
-	intLink := []string{}
-	extLink := []string{}
-	fieldMap := make(map[string]interface{})
 
 	// go-routine to iterate over the html content
 	go Iterate(doc, headerChan, linksChan, fieldChan)
@@ -52,18 +49,40 @@ func Parse(doc *html.Tokenizer) (*domain.Result, error) {
 	go func() {
 		defer wg.Done()
 		for hTag := range headerChan {
-			hMap[hTag] = hMap[hTag] + 1
+			if hTag == H1 {
+				h.AddH1()
+			}
+			if hTag == H2 {
+				h.AddH2()
+			}
+			if hTag == H3 {
+				h.AddH3()
+			}
+			if hTag == H4 {
+				h.AddH4()
+			}
+			if hTag == H5 {
+				h.AddH5()
+			}
+			if hTag == H6 {
+				h.AddH6()
+			}
 		}
 
 	}()
+
 	go func() {
 		defer wg.Done()
 		for link := range linksChan {
 			ok := isInternalLink(link)
 			if ok {
-				intLink = append(intLink, link)
+				l.AddInternal()
 			} else {
-				extLink = append(extLink, link)
+				l.AddExternal()
+			}
+			yes := isAccessible(link)
+			if !yes {
+				l.AddInAccessible()
 			}
 		}
 	}()
@@ -72,35 +91,23 @@ func Parse(doc *html.Tokenizer) (*domain.Result, error) {
 		defer wg.Done()
 		for field := range fieldChan {
 			for k, v := range field {
-				fieldMap[k] = v
+				if k == LOGIN {
+					res.IsLoginPage = v.(bool)
+				}
+				if k == VERSION {
+					res.HtmlVersion = v.(string)
+				}
+				if k == TITLE {
+					res.PageTitle = v.(string)
+				}
 			}
 		}
 	}()
 
 	wg.Wait()
 
-	res.Headers.H1 = hMap[H1]
-	res.Headers.H2 = hMap[H2]
-	res.Headers.H3 = hMap[H3]
-	res.Headers.H4 = hMap[H4]
-	res.Headers.H5 = hMap[H5]
-	res.Headers.H6 = hMap[H6]
-
-	res.Links.AllLinks = len(intLink) + len(extLink)
-	res.Links.Internal = len(intLink)
-	res.Links.External = len(extLink)
-
-	for k, v := range fieldMap {
-		if k == LOGIN {
-			res.IsLoginPage = v.(bool)
-		}
-		if k == VERSION {
-			res.HtmlVersion = v.(string)
-		}
-		if k == TITLE {
-			res.PageTitle = v.(string)
-		}
-	}
+	res.Links = *l
+	res.Headers = *h
 
 	return res, nil
 }
@@ -204,6 +211,13 @@ func isInternalLink(link string) bool {
 		log.Fatal(err)
 	}
 	if u.Scheme == "" {
+		return true
+	}
+	return false
+}
+
+func isAccessible(link string) bool {
+	if strings.HasPrefix(link, "http://") || strings.HasPrefix(link, "https://") || (strings.HasPrefix(link, "/") && len(link) > 1) {
 		return true
 	}
 	return false

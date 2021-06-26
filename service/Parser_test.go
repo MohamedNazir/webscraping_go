@@ -11,20 +11,14 @@ import (
 
 var (
 	HTML_FIRST_INPUT                  = `<!doctype html> <html> <head> <title>The Go Playground</title> <link rel="stylesheet" href="/static/style.css"> </head> <body itemscope itemtype="http://schema.org/CreativeWork"> <input type="button" value="Run" id="embedRun"> <div id="banner"> <h1> Sample text </h1> <h2> Sample text </h2> <h3> Sample text </h3> <h4> Sample text </h4> <h5> Sample text </h5> <h6> Sample text </h6> <input type="password" name="password" id ="test" > <input type="button" value="About" id="aboutButton"> </div> <div id="output"></div> <img itemprop="image" src="/static/gopher.png" style="display:none"> <div id="about"> <p><b>About the Playground</b></p> <a href="http://playground"> external link </a> <a href="/pages"> Internal link </a> </p> </div> </body> </html>`
-	HTML_SECOND_INPUT                 = `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> <html> <head> <title>The Test Case 2</title> </head> <body> <div id="banner"> <h1> Sample text </h1> <h3> Sample text </h3> <h5> Sample text </h5> <input type="button" value="About" id="aboutButton"> </div> <img itemprop="image" src="/static/gopher.png" style="display:none"> <div id="about"> <p><b>About the Playground</b></p> <a href="http://playground"> external link </a> <a href="/pages"> Internal link </a> <a href="/"> Broken link 1 </a> <a href="#"> Broken link 2 </a> </p> </div> </body> </html>`
+	HTML_SECOND_INPUT                 = `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> <html> <head> <title>The Test Case 2</title> </head> <body> <div id="banner"> <h1> Sample text </h1> <h3> Sample text </h3> <h5> Sample text </h5> <input type="button" value="About" id="aboutButton"> </div> <img itemprop="image" src="/static/gopher.png" style="display:none"> <div id="about"> <p><b>About the Playground</b></p> <a href="http://playground"> external link </a> <a href="/pages"> Internal link </a> <a href="/"> Broken link 1 </a> <a href="#"> Broken link 2 </a>  </p><p><a href="mailto:someone@example.com">Send email</a></p> </div> </body> </html>`
 	DOC_ONE           *html.Tokenizer = html.NewTokenizer(strings.NewReader(HTML_FIRST_INPUT))
 	DOC_TWO           *html.Tokenizer = html.NewTokenizer(strings.NewReader(HTML_SECOND_INPUT))
 	headers_1                         = domain.Headers{
 		H1: 1, H2: 1, H3: 1, H4: 1, H5: 1, H6: 1,
 	}
 	links_1 = domain.Links{
-		Internal: 1, External: 1, InAccessible: 0, AllLinks: 2, UniqueLinks: 0,
-	}
-	headers_2 = domain.Headers{
-		H1: 1, H2: 0, H3: 1, H4: 0, H5: 1, H6: 0,
-	}
-	links_2 = domain.Links{
-		Internal: 3, External: 1, InAccessible: 0, AllLinks: 4, UniqueLinks: 0,
+		Internal: 1, External: 1, InAccessible: 0,
 	}
 	expected_1 = &domain.Result{
 		HtmlVersion: "HTML 5",
@@ -32,6 +26,13 @@ var (
 		IsLoginPage: true,
 		Headers:     headers_1,
 		Links:       links_1,
+	}
+
+	headers_2 = domain.Headers{
+		H1: 1, H2: 0, H3: 1, H4: 0, H5: 1, H6: 0,
+	}
+	links_2 = domain.Links{
+		Internal: 3, External: 2, InAccessible: 3,
 	}
 	expected_2 = &domain.Result{
 		HtmlVersion: "HTML 4.01",

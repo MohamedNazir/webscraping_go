@@ -27,7 +27,7 @@ var (
 )
 
 func (hpc *HtmlParserHandler) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Request received for /")
+	log.Println("Sending Html template")
 	render(w, nil)
 }
 
