@@ -25,6 +25,18 @@
 4. run the command as "go run main.go"
 
 
+
+**Project Struture**
+
+webscraping_go/
+├── app                                 # Contains app.go for server mux routing of request
+├── asset                               # Contains the HTML files for view rendering
+├── cmd                                 # main.go file
+├── domain                              # Contains the domains struct, in this web app it contains response format struct.
+├── handler                             # Contains handler files.
+├── service                             # Contains service files where core business logic resides.
+
+
 **Features**
 1. Fully tested 
 2. web based html template application 
