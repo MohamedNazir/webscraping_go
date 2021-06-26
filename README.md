@@ -4,13 +4,13 @@
 
 **To Run as docker container**
 
-1. Install and start your docker application.
-2. download/clone the source code
-3. go to home directory
-4. Run the below command where you can find the Dockerfile.
+1. Start your docker client.
+2. Download/clone the source code.
+3. Go to application root directory.
+4. Run the command where you can find the Dockerfile.
    
    **docker build . -t go-webscraper**
-5. After build success Run the below command.
+5. After build success Run the command.
    
    **docker run -p 8080:8080 -it go-webscraper**
 6. Open the web browser and hit the url "https://localhost:8080".
@@ -19,10 +19,11 @@
 
 **To Build and run without docker.**
 
-1. make sure to install latest gol
-2. download/clone the source code
-3. go to cmd directory, where you can find main.go files
-4. run the command as "go run main.go"
+1. Make sure to install latest go.
+2. Download/clone the source code
+3. go to cmd directory inside the root of the application, where you can find main.go files
+4. Run the command as "go run main.go"
+5. Open the web browser and hit the url "https://localhost:8080".
 
 
 
@@ -41,4 +42,4 @@
 
 **Features**
 1. Fully tested 
-2. web based html template application 
+2. web based html template application.

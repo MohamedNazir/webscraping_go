@@ -28,6 +28,9 @@ const (
 	INPUT    = "input"
 	PASSWORD = "password"
 	HTML5    = "HTML 5"
+	HTTP     = "http://"
+	HTTPS    = "https://"
+	SLASH    = "/"
 )
 
 func Parse(doc *html.Tokenizer, url string) (*domain.Result, error) {
@@ -217,7 +220,7 @@ func isInternalLink(link string) bool {
 }
 
 func isAccessible(link string) bool {
-	if strings.HasPrefix(link, "http://") || strings.HasPrefix(link, "https://") || (strings.HasPrefix(link, "/") && len(link) > 1) {
+	if strings.HasPrefix(link, HTTP) || strings.HasPrefix(link, HTTPS) || (strings.HasPrefix(link, SLASH) && len(link) > 1) {
 		return true
 	}
 	return false

@@ -16,6 +16,8 @@ const (
 	ERR_MSG_ERROR = "Sorry, something went wrong"
 	RESULT        = "result"
 	SUCCESS_RES   = "sending response back"
+	SEARCH_REQ    = "Request received for /search"
+	HTML_RES      = "Sending Html Page as response"
 )
 
 type HtmlParserHandler struct {
@@ -23,16 +25,16 @@ type HtmlParserHandler struct {
 }
 
 var (
-	tmpl = template.Must(template.ParseFiles("../asset/index.html"))
+	t = template.Must(template.ParseFiles("../asset/index.html"))
 )
 
 func (hpc *HtmlParserHandler) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Sending Html template")
+	log.Println(HTML_RES)
 	render(w, nil)
 }
 
 func (hpc *HtmlParserHandler) SearchHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Request received for /search")
+	log.Println(SEARCH_REQ)
 	if err := r.ParseForm(); err != nil {
 		log.Println(err)
 		return
@@ -51,8 +53,7 @@ func (hpc *HtmlParserHandler) SearchHandler(w http.ResponseWriter, r *http.Reque
 }
 
 func render(w http.ResponseWriter, data interface{}) {
-
-	if err := tmpl.Execute(w, data); err != nil {
+	if err := t.Execute(w, data); err != nil {
 		log.Println(err)
 		http.Error(w, ERR_MSG_ERROR, http.StatusInternalServerError)
 	}

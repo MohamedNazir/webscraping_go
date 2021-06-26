@@ -18,7 +18,16 @@ var (
 	transport = &http.Transport{
 		TLSClientConfig: config,
 	}
-	client *http.Client
+
+	client  *http.Client
+	timeout time.Duration = 5 * time.Second
+)
+
+const (
+	SERVER_STARTED   = "Server started"
+	SERVER_STOPPED   = "Server stopped"
+	SHUTDOWN_SUCCESS = "Server exited properly"
+	SHUTDOWN_FAILED  = "server Shutdown Failed:%s"
 )
 
 func init() {
@@ -69,22 +78,22 @@ func serve(ctx context.Context) (err error) {
 		}
 	}()
 
-	log.Printf("server started")
+	log.Println(SERVER_STARTED)
 
 	<-ctx.Done()
 
-	log.Printf("server stopped")
+	log.Println(SERVER_STOPPED)
 
-	ctxShutDown, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctxShutDown, cancel := context.WithTimeout(context.Background(), timeout)
 	defer func() {
 		cancel()
 	}()
 
 	if err = srv.Shutdown(ctxShutDown); err != nil {
-		log.Fatalf("server Shutdown Failed:%+s", err)
+		log.Fatalf(SHUTDOWN_FAILED, err)
 	}
 
-	log.Printf("server exited properly")
+	log.Println(SHUTDOWN_SUCCESS)
 
 	if err == http.ErrServerClosed {
 		err = nil

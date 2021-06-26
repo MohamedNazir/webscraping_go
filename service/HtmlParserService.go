@@ -29,7 +29,7 @@ func NewHtmlParserService(client *http.Client) *DefaultParaserService {
 func (s DefaultParaserService) ParseHtml(u string) (*domain.Result, error) {
 	res, _ := url.Parse(u)
 
-	if res.Scheme == "" || res.Host == "" {
+	if isEmpty(res.Scheme) || isEmpty(res.Host) {
 		return nil, fmt.Errorf(INVALID_URL)
 	}
 
@@ -42,4 +42,8 @@ func (s DefaultParaserService) ParseHtml(u string) (*domain.Result, error) {
 
 	return Parse(doc, u)
 
+}
+
+func isEmpty(s string) bool {
+	return s == ""
 }
