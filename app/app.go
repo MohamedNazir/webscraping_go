@@ -35,8 +35,8 @@ func StartApplication() {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	go func() {
-		oscall := <-c
-		log.Printf("system call:%+v", oscall)
+		osCall := <-c
+		log.Printf("system call:%+v", osCall)
 		cancel()
 	}()
 
