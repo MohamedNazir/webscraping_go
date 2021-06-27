@@ -1,13 +1,18 @@
 package domain
 
-import "sync/atomic"
+import (
+	"sync"
+	"sync/atomic"
+)
 
 type Headers struct {
 	H1, H2, H3, H4, H5, H6 int64
 }
 
 type Links struct {
+	mu                               sync.Mutex
 	Internal, External, InAccessible int64
+	AllLinks                         []string
 }
 
 type Result struct {
@@ -46,4 +51,10 @@ func (h *Headers) AddH5() {
 }
 func (h *Headers) AddH6() {
 	atomic.AddInt64(&h.H6, 1)
+}
+
+func (l *Links) AddAllLinks(link string) {
+	l.mu.Lock()
+	l.AllLinks = append(l.AllLinks, link)
+	l.mu.Unlock()
 }

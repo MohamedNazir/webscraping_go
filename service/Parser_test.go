@@ -1,11 +1,15 @@
 package service
 
 import (
+	"bytes"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"testing"
 
 	"github.com/MohamedNazir/webscraper/domain"
+	"github.com/MohamedNazir/webscraper/utils/mocks"
+	"github.com/MohamedNazir/webscraper/webclient"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/html"
 )
@@ -18,9 +22,12 @@ var (
 	headers_1                         = domain.Headers{
 		H1: 1, H2: 1, H3: 1, H4: 1, H5: 1, H6: 1,
 	}
-	links_1 = domain.Links{
-		Internal: 1, External: 1, InAccessible: 0,
+	AllLinks_2 = []string{"http://playground", "http://dummy.com/2/pages", "http://dummy.com/2/", "http://dummy.com/2/#", "mailto:someone@example.com"}
+	AllLinks_1 = []string{"http://playground", "http://dummy.com/1/pages"}
+	links_1    = domain.Links{
+		Internal: 1, External: 1, InAccessible: 0, AllLinks: AllLinks_1,
 	}
+
 	expected_1 = &domain.Result{
 		Url:         "http://dummy.com/1",
 		HtmlVersion: "HTML 5",
@@ -29,12 +36,14 @@ var (
 		Headers:     headers_1,
 		Links:       links_1,
 	}
+	URL1 = "http://dummy.com/1"
+	URL2 = "http://dummy.com/2"
 
 	headers_2 = domain.Headers{
 		H1: 1, H2: 0, H3: 1, H4: 0, H5: 1, H6: 0,
 	}
 	links_2 = domain.Links{
-		Internal: 3, External: 2, InAccessible: 3,
+		Internal: 3, External: 2, InAccessible: 0, AllLinks: AllLinks_2,
 	}
 	expected_2 = &domain.Result{
 		Url:         "http://dummy.com/2",
@@ -49,59 +58,44 @@ var (
 // go test Parser_test.go Parser.go
 // go test -race --cover -v Parser_test.go Parser.go
 
-func TestParse(t *testing.T) {
+func TestParse_AccessibleHttpMock(t *testing.T) {
 	t.Parallel()
 
-	type args struct {
-		doc *html.Tokenizer
-		url string
+	// create a new reader with the HTML
+	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+		r := ioutil.NopCloser(bytes.NewReader([]byte(HTML_INPUT)))
+		return &http.Response{
+			StatusCode: 200,
+			Body:       r,
+		}, nil
 	}
 
-	testInput1 := &args{
-		doc: DOC_ONE,
-		url: "http://dummy.com/1",
-	}
-	testInput2 := &args{
-		doc: DOC_TWO,
-		url: "http://dummy.com/2",
-	}
+	client := webclient.Client
+	service := NewParserService(client)
 
-	tests := []struct {
-		name     string
-		input    *args
-		expected *domain.Result
-	}{
-		{"test case 1", testInput1, expected_1},
-		{"test case 2", testInput2, expected_2},
-	}
-	for _, test := range tests {
-		res, err := Parse(test.input.doc, test.input.url)
-		assert.Nil(t, err)
-		assert.NotNil(t, res)
-		assert.Equal(t, test.expected, res)
-	}
+	res, err := Parse(*service, DOC_ONE, URL1)
+	assert.Nil(t, err)
+	assert.NotNil(t, res)
+	assert.Equal(t, expected_1, res)
 }
 
-// go test -cpu 1,2,4,8 -benchmem -run=^$ -bench . Parser_test.go
-func BenchmarkParse(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		Parse(DOC_ONE, "dummy")
+func TestParse_InAccessibleHttpMock(t *testing.T) {
+	t.Parallel()
+
+	// create a new reader with the HTML
+	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+		r := ioutil.NopCloser(bytes.NewReader([]byte(HTML_INPUT)))
+		return &http.Response{
+			StatusCode: 500,
+			Body:       r,
+		}, nil
 	}
 
-}
+	client := webclient.Client
+	service := NewParserService(client)
 
-func TestIsReachable(t *testing.T) {
-
-	//	client := wc.Client
-	Client := &http.Client{}
-	service := NewParserService(Client)
-
-	s := [...]string{"/p/Ztyu2FJaajl", "https://gobyexample.com/", "mailto:golang-dev@googlegroups.com", "/"}
-
-	for _, v := range s {
-		ok := service.IsReachable(v)
-		t.Log(ok, "==>", v)
-
-	}
-	assert.NotNil(t, s)
+	res, err := Parse(*service, DOC_TWO, URL2)
+	assert.Nil(t, err)
+	assert.NotNil(t, res)
+	assert.Equal(t, expected_2, res)
 }

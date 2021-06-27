@@ -8,9 +8,9 @@ import (
 	"os/signal"
 	"time"
 
-	h "github.com/MohamedNazir/webscraper/handler"
-	s "github.com/MohamedNazir/webscraper/service"
-	wc "github.com/MohamedNazir/webscraper/webclient"
+	"github.com/MohamedNazir/webscraper/handler"
+	"github.com/MohamedNazir/webscraper/service"
+	"github.com/MohamedNazir/webscraper/webclient"
 )
 
 var (
@@ -49,8 +49,8 @@ func serve(ctx context.Context) (err error) {
 		port = "8080"
 	}
 
-	client := wc.Client
-	hh := h.ParserHandler{Service: s.NewParserService(client)}
+	client := webclient.Client
+	hh := handler.ParserHandler{Service: service.NewParserService(client)}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", hh.IndexHandler)

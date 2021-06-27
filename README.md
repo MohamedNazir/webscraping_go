@@ -37,6 +37,10 @@
          ├──  domain           # Contains the domains struct, in this web app it contains response format struct.
          ├──  handler          # Contains handler files.
          ├──  service          # Contains service files where core business logic resides.
+         ├──  utils/mocks      # Contains a mock web client used for test cases.
+         ├──  webclient        # Contains web client to access the http end point.
+
+
 
 
 
