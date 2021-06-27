@@ -10,7 +10,6 @@ import (
 	"time"
 
 	h "github.com/MohamedNazir/webscraper/handler"
-	n "github.com/MohamedNazir/webscraper/network"
 	s "github.com/MohamedNazir/webscraper/service"
 )
 
@@ -62,8 +61,7 @@ func serve(ctx context.Context) (err error) {
 		port = "8080"
 	}
 
-	httpComm := n.NewWebPageDownloader(client)
-	hh := h.ParserHandler{Service: s.NewParserService(httpComm)}
+	hh := h.ParserHandler{Service: s.NewParserService(client)}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", hh.IndexHandler)

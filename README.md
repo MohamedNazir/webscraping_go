@@ -12,7 +12,7 @@
    **docker build . -t go-webscraper**
 5. After build success Run the command.
    
-   **docker run -p 8080:8080 -it go-webscraper**
+   **docker run -p 8080:8080 -d go-webscraper**
 6. Open the web browser and hit the url "http://localhost:8080".
 
 
@@ -37,7 +37,7 @@
          ├──  domain           # Contains the domains struct, in this web app it contains response format struct.
          ├──  handler          # Contains handler files.
          ├──  service          # Contains service files where core business logic resides.
-         ├──  network          # http outbound request for other urls
+
 
 
 
