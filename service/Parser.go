@@ -1,7 +1,9 @@
 package service
 
 import (
+	"fmt"
 	"log"
+	"net/http"
 	"net/url"
 	"strings"
 	"sync"
@@ -220,8 +222,19 @@ func isInternalLink(link string) bool {
 }
 
 func isAccessible(link string) bool {
+	fmt.Println("link ->", link)
 	if strings.HasPrefix(link, HTTP) || strings.HasPrefix(link, HTTPS) || (strings.HasPrefix(link, SLASH) && len(link) > 1) {
 		return true
 	}
 	return false
+}
+
+func (s DefaultParserService) IsReachable(u string) bool {
+	request, _ := http.NewRequest(http.MethodGet, u, nil)
+
+	resp, err := s.webclient.Do(request)
+	if err != nil || resp.StatusCode != 200 {
+		return false
+	}
+	return true
 }

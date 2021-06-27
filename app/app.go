@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"crypto/tls"
 	"log"
 	"net/http"
 	"os"
@@ -11,15 +10,10 @@ import (
 
 	h "github.com/MohamedNazir/webscraper/handler"
 	s "github.com/MohamedNazir/webscraper/service"
+	wc "github.com/MohamedNazir/webscraper/webclient"
 )
 
 var (
-	config    = &tls.Config{InsecureSkipVerify: true}
-	transport = &http.Transport{
-		TLSClientConfig: config,
-	}
-
-	client  *http.Client
 	timeout time.Duration = 5 * time.Second
 )
 
@@ -29,12 +23,6 @@ const (
 	SHUTDOWN_SUCCESS = "Server exited properly"
 	SHUTDOWN_FAILED  = "server Shutdown Failed:%s"
 )
-
-func init() {
-	client = &http.Client{
-		Transport: transport,
-	}
-}
 
 func StartApplication() {
 
@@ -61,6 +49,7 @@ func serve(ctx context.Context) (err error) {
 		port = "8080"
 	}
 
+	client := wc.Client
 	hh := h.ParserHandler{Service: s.NewParserService(client)}
 
 	mux := http.NewServeMux()

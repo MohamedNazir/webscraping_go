@@ -1,11 +1,12 @@
 package service
 
 import (
-	"reflect"
+	"net/http"
 	"strings"
 	"testing"
 
 	"github.com/MohamedNazir/webscraper/domain"
+	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/html"
 )
 
@@ -66,25 +67,18 @@ func TestParse(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		args    *args
-		want    *domain.Result
-		wantErr bool
+		name     string
+		input    *args
+		expected *domain.Result
 	}{
-		{"test case 1", testInput1, expected_1, false},
-		{"test case 2", testInput2, expected_2, false},
+		{"test case 1", testInput1, expected_1},
+		{"test case 2", testInput2, expected_2},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := Parse(tt.args.doc, tt.args.url)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Parse() = %v, want %v", got, tt.want)
-			}
-		})
+	for _, test := range tests {
+		res, err := Parse(test.input.doc, test.input.url)
+		assert.Nil(t, err)
+		assert.NotNil(t, res)
+		assert.Equal(t, test.expected, res)
 	}
 }
 
@@ -94,4 +88,20 @@ func BenchmarkParse(b *testing.B) {
 		Parse(DOC_ONE, "dummy")
 	}
 
+}
+
+func TestIsReachable(t *testing.T) {
+
+	//	client := wc.Client
+	Client := &http.Client{}
+	service := NewParserService(Client)
+
+	s := [...]string{"/p/Ztyu2FJaajl", "https://gobyexample.com/", "mailto:golang-dev@googlegroups.com", "/"}
+
+	for _, v := range s {
+		ok := service.IsReachable(v)
+		t.Log(ok, "==>", v)
+
+	}
+	assert.NotNil(t, s)
 }
