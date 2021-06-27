@@ -37,6 +37,8 @@
          ├──  domain           # Contains the domains struct, in this web app it contains response format struct.
          ├──  handler          # Contains handler files.
          ├──  service          # Contains service files where core business logic resides.
+         ├──  network          # http outbound request for other urls
+
 
 
 
