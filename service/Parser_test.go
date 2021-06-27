@@ -90,9 +90,8 @@ func TestParse(t *testing.T) {
 
 // go test -cpu 1,2,4,8 -benchmem -run=^$ -bench . Parser_test.go
 func BenchmarkParse(b *testing.B) {
-
 	for i := 0; i < b.N; i++ {
-		Parse(DOC_ONE, "")
+		Parse(DOC_ONE, "dummy")
 	}
 
 }

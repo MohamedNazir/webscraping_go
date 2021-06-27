@@ -20,20 +20,20 @@ const (
 	HTML_RES      = "Sending Html Page as response"
 )
 
-type HtmlParserHandler struct {
-	Service service.HtmlParserService
+type ParserHandler struct {
+	Service service.ParserService
 }
 
 var (
 	t = template.Must(template.ParseFiles("../asset/index.html"))
 )
 
-func (hpc *HtmlParserHandler) IndexHandler(w http.ResponseWriter, r *http.Request) {
+func (hpc *ParserHandler) IndexHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println(HTML_RES)
 	render(w, nil)
 }
 
-func (hpc *HtmlParserHandler) SearchHandler(w http.ResponseWriter, r *http.Request) {
+func (hpc *ParserHandler) SearchHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println(SEARCH_REQ)
 	if err := r.ParseForm(); err != nil {
 		log.Println(err)
